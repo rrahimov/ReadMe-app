@@ -26,13 +26,21 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
+import Combine
 import class UIKit.UIImage
 
-struct Library {
+class Library: ObservableObject {
   var sortedBooks: [Book] { booksCache }
+    
+    /// Adds a book at the start of the library's manually-sorted books.
+    func addNewBook(_ book: Book, image: UIImage?) {
+        booksCache.insert(book, at: 0)
+        uiImages[book] = image
+    }
 
   /// An in-memory cache of the manually-sorted books that are persistently stored.
-  private var booksCache: [Book] = [
+    // The properties that you mutate are very likely going to need to be published. That way your UI can update in response to those mutations.
+  @Published private var booksCache: [Book] = [
     .init(title: "Ein Neues Land", author: "Shaun Tan", microReview: "ye bebe"),
     .init(title: "Bosch", author: "Laurinda Dixon"),
     .init(title: "Dare to Lead", author: "Brené Brown", microReview: "efirdi"),
@@ -45,6 +53,6 @@ struct Library {
     .init(title: "Drawing People", author: "Barbara Bradley"),
     .init(title: "What to Say When You Talk to Yourself", author: "Shad Helmstetter")
   ]
-    var uiImages: [Book: UIImage] = [:]
+   @Published var uiImages: [Book: UIImage] = [:]
     
 }
